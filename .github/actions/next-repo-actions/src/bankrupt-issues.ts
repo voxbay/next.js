@@ -6,15 +6,23 @@ async function main() {
 
   const octokit = getOctokit(process.env.GITHUB_TOKEN)
   const { owner, repo } = context.repo
-  let issue_number = 66573
+  const query = `repo:${owner}/${repo} is:issue is:open created<=2020-12-31`
+  // let issue_number: number[] = []
 
   try {
-    await octokit.rest.issues.createComment({
-      owner,
-      repo,
-      issue_number,
-      body: 'Hello world!',
+    const { data } = await octokit.rest.search.issuesAndPullRequests({
+      q: query,
+      per_page: 50,
     })
+
+    info(`Total # of issues = ${data.items.length}`)
+
+    // await octokit.rest.issues.createComment({
+    //   owner,
+    //   repo,
+    //   issue_number,
+    //   body: 'Hello world!',
+    // })
   } catch (error) {
     setFailed(error)
   }
