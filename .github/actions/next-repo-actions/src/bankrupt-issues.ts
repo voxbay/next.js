@@ -6,15 +6,15 @@ async function main() {
 
   const octokit = getOctokit(process.env.GITHUB_TOKEN)
   const { owner, repo } = context.repo
+  let issue_number = 66573
 
   try {
-    const { data: issue } = await octokit.rest.issues.get({
+    await octokit.rest.issues.createComment({
       owner,
       repo,
-      issue_number: 66573,
+      issue_number,
+      body: 'Hello world!',
     })
-
-    info(`Issue data = ${JSON.stringify(issue)}`)
   } catch (error) {
     setFailed(error)
   }
